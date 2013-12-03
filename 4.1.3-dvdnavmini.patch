@@ -1,0 +1,18 @@
+From mplayer configure:
+libdvdnavmini is intentionally not linked against libdvdread (to permit 
+MPlayer to use its own copy of the library).
+
+So libdvdnavmini needs to be static. '-no-undefined' is added to global 
+LDFLAGS in configure.ac, so instead of omitting it here, we have to 
+force -static.
+
+--- origsrc/libdvdnav-4.1.3/src/Makefile.am	2008-06-14 07:33:21.000000000 -0500
++++ src/libdvdnav-4.1.3/src/Makefile.am	2009-03-02 19:58:31.961640800 -0600
+@@ -29,6 +29,6 @@ libdvdnavmini_la_SOURCES = $(libdvdnav_l
+ libdvdnavmini_la_LIBADD = $(THREAD_LIBS) \
+ 	$(top_builddir)/src/vm/libdvdvm.la
+ 
+-libdvdnavmini_la_LDFLAGS = $(libdvdnav_la_LDFLAGS)
++libdvdnavmini_la_LDFLAGS = $(libdvdnav_la_LDFLAGS) -static
+ 
+ include_HEADERS = dvdnav.h dvdnav_events.h dvd_types.h
